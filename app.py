@@ -14,7 +14,7 @@ from langchain.memory            import ConversationBufferMemory
 from langchain.vectorstores      import FAISS
 
 # Directory where the HTML files are stored
-HTML_FILES_DIR = "/Applications/langchain/html_files_full_list"
+HTML_FILES_DIR = "./html_files"
 
 # read all the HTML files and concatenate their content into a single string
 def get_html_text():
