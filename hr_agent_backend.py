@@ -21,7 +21,7 @@ FILES_DIR = "./docs"
 # Load environment variables
 load_dotenv()
 
-# Load all the .txt files from docs directory
+# read all the TXT files and concatenate their content into a single string
 def get_txt_contents():
     text = ""
     for filename in os.listdir(FILES_DIR):
@@ -56,10 +56,13 @@ timekeeping_policy = RetrievalQA.from_chain_type(
     retriever = vectorstore.as_retriever(search_type = "similarity")
 )
 
-df = pd.read_csv("employee_data.csv")  # load employee_data.csv as dataframe
+# load employee_data.csv as dataframe
+df = pd.read_csv("./docs/employee_data.csv")  
+
+# set access of python_repl tool to the dataframe
 python = PythonAstREPLTool(
     locals={"df": df}
-)  # set access of python_repl tool to the dataframe
+)  
 
 # create calculator tool
 calculator = LLMMathChain(llm=llm)
@@ -68,7 +71,7 @@ calculator = LLMMathChain(llm=llm)
 user = "Alexander Verdad"  # set user
 df_columns = df.columns.to_list()  # print column names of df
 
-# prep the (tk policy) vectordb retriever, the python_repl(with df access) and langchain calculator as tools for the agent
+# prepare the vectordb retriever, the python_repl and langchain calculator as tools for the agent
 tools = [
     Tool(
         name="Timekeeping Policies",
