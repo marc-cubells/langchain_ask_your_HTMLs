@@ -30,8 +30,6 @@ def get_txt_contents():
                 text += f.read()
     return text
 
-print("0000000")
-
 text = get_txt_contents()
 
 #Split text into tokens
@@ -48,8 +46,7 @@ documents = text_splitter.split_text(text=text)
 embeddings  = OpenAIEmbeddings(model = "text-embedding-ada-002")
 vectorstore = FAISS.from_texts(documents, embedding=embeddings)
 
-print("C")
-
+# Initialize the Langchain chatbot using the OpenAI model
 llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
 
 # initialize vectorstore retriever object
