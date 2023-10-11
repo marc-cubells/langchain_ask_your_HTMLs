@@ -1,5 +1,6 @@
 # load core modules
 from dotenv import load_dotenv
+import os
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
@@ -14,24 +15,40 @@ from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 from langchain import LLMMathChain
 
-#Using ChromaDB as a vector store for the embeddigns
-from langchain.vectorstores import Chroma
+# Directory where the HTML files are stored
+FILES_DIR = "./docs"
 
 # Load environment variables
 load_dotenv()
 
 # Load all the .txt files from docs directory
-docs = TextLoader("./docs/hr_policy.txt").load()
+def get_txt_contents():
+    text = ""
+    for filename in os.listdir(FILES_DIR):
+        if filename.endswith(".txt"):
+            with open(os.path.join(FILES_DIR, filename), 'r', encoding='utf-8') as f:
+                text += f.read()
+    return text
+
+print("0000000")
+
+text = get_txt_contents()
 
 #Split text into tokens
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-texts = text_splitter.split_documents(docs)
+text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size      = 1000,
+        chunk_overlap   = 150,
+        length_function = len
+    )
 
-#Turn the text into embeddings
-embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+# Process the TXT content and create the list of document chunks
+documents = text_splitter.split_text(text=text)
 
-#Store the embeddings into chromadb directory
-docsearch = Chroma.from_documents(documents=texts, embedding=embeddings, persist_directory="./chromadb")
+# Vectorize the documents and create a vectorstore using FAISS
+embeddings  = OpenAIEmbeddings(model = "text-embedding-ada-002")
+vectorstore = FAISS.from_texts(documents, embedding=embeddings)
+
+print("C")
 
 llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
 
@@ -39,7 +56,7 @@ llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
 timekeeping_policy = RetrievalQA.from_chain_type(
     llm=llm,
     chain_type="stuff",
-    retriever=docsearch.as_retriever(),
+    retriever = vectorstore.as_retriever(search_type = "similarity")
 )
 
 df = pd.read_csv("employee_data.csv")  # load employee_data.csv as dataframe
