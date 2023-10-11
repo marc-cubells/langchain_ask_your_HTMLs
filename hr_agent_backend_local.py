@@ -35,8 +35,6 @@ docsearch = Chroma.from_documents(documents=texts, embedding=embeddings, persist
 
 llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
 
-print("Checkpoint E")
-
 # initialize vectorstore retriever object
 timekeeping_policy = RetrievalQA.from_chain_type(
     llm=llm,
@@ -106,7 +104,6 @@ agent = initialize_agent(
     verbose=True,
     agent_kwargs=agent_kwargs,
 )
-
 
 # define q and a function for frontend
 def get_response(user_input):
