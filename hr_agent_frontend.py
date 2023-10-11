@@ -1,8 +1,4 @@
 import streamlit as st
-import random
-from streamlit_chat import message
-
-# from hr_agent_backend_azure import get_response
 from hr_agent_backend import get_response
 
 def process_input(user_input):
@@ -29,16 +25,15 @@ def main():
         with st.chat_message("user"):
             st.markdown(user_input)
 
-        # result = qa({"question": prompt, "chat_history": [(message["role"], message["content"]) for message in st.session_state.messages]})
         result = process_input(user_input)
         
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
-            full_response = result
-            message_placeholder.markdown(full_response + "|")
+            message_placeholder.markdown(result + "|")
 
-        message_placeholder.markdown(full_response)
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+        message_placeholder.markdown(result)
+        st.session_state.messages.append({"role": "assistant", "content": result})
+
 
 if __name__ == "__main__":
     main()            
