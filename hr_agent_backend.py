@@ -6,6 +6,8 @@ from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains            import ConversationalRetrievalChain
+from langchain.memory            import ConversationBufferMemory
 
 # load agents and tools modules
 import pandas as pd
@@ -46,14 +48,25 @@ embeddings  = OpenAIEmbeddings(model = "text-embedding-ada-002")
 vectorstore = FAISS.from_texts(documents, embedding=embeddings)
 
 # Initialize the Langchain chatbot using the OpenAI model
-llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
+openai_llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
 
-# initialize vectorstore retriever object
-timekeeping_policy = RetrievalQA.from_chain_type(
-    llm=llm,
-    chain_type="stuff",
-    retriever = vectorstore.as_retriever(search_type = "similarity")
+# Set up a buffer for conversation history
+conversation_memory = ConversationBufferMemory(
+    memory_key      = "chat_history", 
+    return_messages = True, 
+    output_key      = "answer"
 )
+
+timekeeping_policy = ConversationalRetrievalChain.from_llm(
+        llm                     = openai_llm, 
+        retriever               = vectorstore.as_retriever(search_type = "similarity"), 
+        memory                  = conversation_memory,
+        return_source_documents = False, 
+        verbose                 = True,
+        output_key              = "answer",
+        chain_type              = "stuff",
+        max_tokens_limit        = None
+    )
 
 # load employee_data.csv as dataframe
 df = pd.read_csv("./docs/employee_data.csv")  
@@ -64,7 +77,7 @@ python = PythonAstREPLTool(
 )  
 
 # create calculator tool
-calculator = LLMMathChain(llm=llm)
+calculator = LLMMathChain(llm=openai_llm)
 
 # create variables for f strings embedded in the prompts
 user = "Alexander Verdad"  # set user
@@ -115,7 +128,7 @@ agent_kwargs = {
 # initialize the LLM agent
 agent = initialize_agent(
     tools,
-    llm,
+    openai_llm,
     agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
     verbose=True,
     agent_kwargs=agent_kwargs,

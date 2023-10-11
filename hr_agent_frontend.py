@@ -37,7 +37,7 @@ if st.button("Send"):
 
     st.session_state["input_message_key"] = str(random.random())
 
-    st.experimental_rerun()
+    st.rerun()
 
 if st.session_state["generated"]:
     with chat_container:
