@@ -5,42 +5,40 @@ from streamlit_chat import message
 # from hr_agent_backend_azure import get_response
 from hr_agent_backend import get_response
 
-
 def process_input(user_input):
     response = get_response(user_input)
     return response
 
+# Main Streamlit app
+def main():
+    st.set_page_config(page_title="Chat with your HR Bot ", page_icon=":speech_balloon:")
+    st.header("Chat with your HR Bot  💬")
+    st.info("Type your query in the chat window.")
 
-st.header("HR Chatbot")
-st.markdown("Ask your HR-related questions here.")
+    # Initialize the Streamlit chat interface
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
 
-if "past" not in st.session_state:
-    st.session_state["past"] = []
-if "generated" not in st.session_state:
-    st.session_state["generated"] = []
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-if "input_message_key" not in st.session_state:
-    st.session_state["input_message_key"] = str(random.random())
+    # Get user input and display the chatbot's response
+    if user_input := st.chat_input("Ask your questions from the HTML files"):
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        with st.chat_message("user"):
+            st.markdown(user_input)
 
-chat_container = st.container()
+        # result = qa({"question": prompt, "chat_history": [(message["role"], message["content"]) for message in st.session_state.messages]})
+        result = process_input(user_input)
+        
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            full_response = result
+            message_placeholder.markdown(full_response + "|")
 
-user_input = st.text_input(
-    "Type your message and press Enter to send.",
-    key=st.session_state["input_message_key"],
-)
+        message_placeholder.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-if st.button("Send"):
-    response = process_input(user_input)
-
-    st.session_state["past"].append(user_input)
-    st.session_state["generated"].append(response)
-
-    st.session_state["input_message_key"] = str(random.random())
-
-    st.rerun()
-
-if st.session_state["generated"]:
-    with chat_container:
-        for i in range(len(st.session_state["generated"])):
-            message(st.session_state["past"][i], is_user=True, key=str(i) + "_user")
-            message(st.session_state["generated"][i], key=str(i))
+if __name__ == "__main__":
+    main()            

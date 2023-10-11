@@ -4,10 +4,10 @@ import os
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
-from langchain.chains import RetrievalQA
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains            import ConversationalRetrievalChain
 from langchain.memory            import ConversationBufferMemory
+import streamlit as st
 
 # load agents and tools modules
 import pandas as pd
@@ -31,7 +31,13 @@ def get_txt_contents():
                 text += f.read()
     return text
 
-text = get_txt_contents()
+# Retrieve the concatenated content from all the TXT files
+try:
+    text = get_txt_contents()
+except FileNotFoundError:
+    print(f"Error: HTMLs files not found: {FILES_DIR}")
+except Exception as e:
+    print(f"Error occurred while reading the HTML files: {e}")
 
 #Split text into tokens
 text_splitter = RecursiveCharacterTextSplitter(
