@@ -1,29 +1,69 @@
-# 🤖 HR Chatbot: Streamlining Human Resources with AI
+# 🗣 Chat with Your HTML Files
 
-## 🚀 Introduction
+**Turn Static HTMLs into Interactive Chat Sessions!**
 
-Welcome to the future of Human Resources management – the HR Chatbot! Built with the power of LangChain and Streamlit, this revolutionary chatbot is designed to cater to the multifaceted needs of HR processes, bridging the gap between employees and administrative tasks.
+With our innovative approach powered by LangChain and Streamlit, your HTML files are no longer just static documents. Now you can:
 
-Whether it's handling basic queries about company policies, assisting with leave applications, or offering insights into HR analytics, our HR Chatbot is poised to revolutionize how companies interact with their staff and streamline HR operations.
+- 🗣️ **Interactive Chat Sessions**: Bring your files to life and have meaningful dialogues.
+- 💾 **Local Storage**: Prioritize your privacy; every interaction is kept on your device.
+- 🌐 **Empowered by LLM**: Delve into the advanced tech that drives this experience.
+- ✨ **User-Friendly Design**: Engage effortlessly with your files.
 
-Dive in 🏊 and discover how automation and artificial intelligence come together to enhance the HR experience for both employers and employees.
+  ![WebApp Preview](README_images/webapp_preview.png)
 
-![chatbot_screenshot](chatbot_screenshot.png)
+---
 
-## 🔧 Technical Capabilities
+## 📝 Remarks
 
-- **File Parsing 📁**: The chatbot is capable of extracting and presenting data from both CSV and TXT files, ensuring you can understand your file contents quickly.
+This Web Application is designed for deployment on [Streamlit](https://streamlit.io/).
 
-- **Memory of Conversation 💬**: The chatbot retains memory of the ongoing conversation, enabling a seamless user experience and better understanding of context-based queries.
+---
 
-- **Math Operations ➕**: The chatbot can execute various math operations, giving you insights without the need for external tools.
+## 🚀 Quickstart Guide
 
-## 💡 Technologies Behind
+### 1. Acquire an OpenAI API Key
 
-- **LangChain**: LangChain is an open-source framework that makes it easy to develop applications powered by large language models (LLMs). It provides a modular architecture and a set of tools for connecting LLMs to other data sources and external systems.
+To host and run the Web App on your local browser, you first need a valid OpenAI API Key. Here's how you can get one:
 
-- **Streamlit**: Streamlit is a Python library that makes it easy to create and share beautiful and interactive web applications. It is built on top of popular Python libraries like NumPy, Pandas, and Matplotlib, and can be used to create a wide variety of web applications, from simple dashboards to complex machine learning apps.
+1. Navigate to OpenAI's official platform at [platform.openai.com](https://platform.openai.com) and sign in.
+2. Tap on your profile icon located at the top-right corner and opt for "View API Keys".
+3. Hit the "Create New Secret Key" option to generate a fresh API key.
+4. Label your API key appropriately and finalize by clicking "Create secret key".
+5. Safely store your API key.
 
-Given that both LangChain and Streamlit are Python-based, integrating them becomes a seamless experience, making the duo a formidable pair in the AI development landscape.
+  ![OpenAI API Instructions](README_images/openai_api_keys.png)
 
-![logos](logos.png)
+🔐 **Key Protection Tips**:
+
+- Treat your API key as confidential. Unauthorized access to your key can compromise your OpenAI account and resources.
+  
+- Collaborate with your key only on platforms you trust.
+
+- Employ distinct API keys for varying services to monitor your usage and detect any potential breaches.
+
+- Make it a habit to assess your API key activities and retire those that aren't active.
+
+### 2. Setting Up the Repository
+
+1. Clone the repository to your system.
+2. Rename ".env_example" to ".env" and replace the placeholder with your OpenAI API Key.
+
+    ![Environment File Guide](README_images/env_file.png)
+
+3. Place your desired HTML files for queries inside the "html_files" folder.
+
+### 3. Preparing the Environment
+
+The `requirements.txt` file lists all the essential Python libraries for this Web App. Install them by running the following command in your terminal:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Launch on Streamlit
+
+Fire up the web application on your local browser by running the following command in your terminal:
+
+```bash
+streamlit run app.py
+```
