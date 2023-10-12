@@ -9,7 +9,7 @@ def process_input(user_input):
 def main():
     st.set_page_config(page_title="Chat with your HR Bot ", page_icon=":speech_balloon:")
     st.header("Chat with your HR Bot  💬")
-    st.info("Type your query in the chat window.")
+    st.info("Type your query in the chat window")
 
     # Initialize the Streamlit chat interface
     if "messages" not in st.session_state:

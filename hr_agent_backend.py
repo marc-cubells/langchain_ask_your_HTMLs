@@ -1,20 +1,19 @@
 # load core modules
-from dotenv import load_dotenv
 import os
+from dotenv                      import load_dotenv
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.chat_models import ChatOpenAI
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores      import FAISS
+from langchain.chat_models       import ChatOpenAI
+from langchain.text_splitter     import RecursiveCharacterTextSplitter
 from langchain.chains            import ConversationalRetrievalChain
 from langchain.memory            import ConversationBufferMemory
-import streamlit as st
 
 # load agents and tools modules
 import pandas as pd
 from langchain.tools.python.tool import PythonAstREPLTool
-from langchain.agents import initialize_agent, Tool
-from langchain.agents import AgentType
-from langchain import LLMMathChain
+from langchain.agents            import initialize_agent, Tool
+from langchain.agents            import AgentType
+from langchain                   import LLMMathChain
 
 # Directory where the HTML files are stored
 FILES_DIR = "./docs"
@@ -75,7 +74,7 @@ timekeeping_policy = ConversationalRetrievalChain.from_llm(
     )
 
 # load employee_data.csv as dataframe
-df = pd.read_csv("./docs/employee_data.csv")  
+df = pd.read_csv("./docs/employee_data_v3.csv")  
 
 # set access of python_repl tool to the dataframe
 python = PythonAstREPLTool(
@@ -83,10 +82,10 @@ python = PythonAstREPLTool(
 )  
 
 # create calculator tool
-calculator = LLMMathChain(llm=openai_llm)
+calculator = LLMMathChain.from_llm(llm=openai_llm)
 
 # create variables for f strings embedded in the prompts
-user = "Alexander Verdad"  # set user
+user = "John Doe"  # set user
 df_columns = df.columns.to_list()  # print column names of df
 
 # prepare the vectordb retriever, the python_repl and langchain calculator as tools for the agent
