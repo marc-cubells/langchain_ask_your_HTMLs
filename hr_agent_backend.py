@@ -61,7 +61,7 @@ conversation_memory = ConversationBufferMemory(
     memory_key      = "chat_history", 
     return_messages = True, 
     output_key      = "answer"
-)
+    )
 
 timekeeping_policy = ConversationalRetrievalChain.from_llm(
         llm                     = openai_llm, 
@@ -141,6 +141,17 @@ agent = initialize_agent(
 )
 
 # define q and a function for frontend
+# def get_response(user_input):
+#     response = agent.run(user_input)
+#     return response
+
 def get_response(user_input):
-    response = agent.run(user_input)
+    print("-- Serving request for user_input: %s" % user_input)
+    try:
+        response= agent.run(user_input)
+    except Exception as e:
+        print("-- EXCEPTION RAISED while serving request for user_input: %s" % user_input)
+        response = str(e)
+        if response.startswith("Could not parse LLM output: `"):
+            response = response.removeprefix("Could not parse LLM output: `").removesuffix("`")
     return response
